@@ -53,36 +53,69 @@ public class GameManager {
 
     int n = GameSettings.n;
 
-    if (p.mousePressed) {
-      for (int y = 0; y < n; y++) {
-        for (int x = 0; x < n; x++) {
-          Cell tempCell = cells[x][y];
-          if (
-            tempCell.contains(p.mouseX, p.mouseY) && tempCell.getState() == ' '
-          ) {
-            tempCell.setState('X');
+    switch (GameSettings.turn) {
+      case 'h':
+        if (p.mousePressed) {
+          for (int y = 0; y < n; y++) {
+            for (int x = 0; x < n; x++) {
+              Cell tempCell = cells[x][y];
+              if (
+                tempCell.contains(p.mouseX, p.mouseY) &&
+                tempCell.getState() == ' '
+              ) {
+                tempCell.setState('X');
+
+                GameSettings.turn = 'c';
+              }
+            }
           }
         }
-      }
+        break;
+      case 'c':
+        int bestScore = Integer.MIN_VALUE; // "negative infinity"
+        int[] bestMove = { 0, 0 };
+
+        for (int y = 0; y < n; y++) {
+          for (int x = 0; x < n; x++) {
+            Cell tempCell = cells[x][y];
+            if (tempCell.getState() == ' ') {
+              tempCell.setState('O');
+              int tempScore = minimax(cells, 0, false);
+              tempCell.setState(' ');
+              if (tempScore > bestScore) {
+                bestScore = tempScore;
+                bestMove[0] = x;
+                bestMove[1] = y;
+              }
+            }
+          }
+        }
+        cells[bestMove[0]][bestMove[1]].setState('O');
+        GameSettings.turn = 'h';
+        break;
+      default: // If turn is not 'h' or 'c', go to settings screen
+        screenManager.setCurrentScreen(new SettingsScreen(screenManager));
+        break;
     }
 
     winner = checkWin(cells);
-    if (checkTie() == true) {
-      winner = 'T';
-    }
   }
 
-  public char checkWin(Cell[][] cells) {
+  public char checkWin(Cell[][] cellsIn) {
+    if (checkTie(cellsIn)) {
+      return 'T';
+    }
+
     int n = GameSettings.n;
 
     char tempChar = ' ';
 
     // Check rows
     for (int y = 0; y < n; y++) {
-      tempChar = cells[0][y].getState();
+      tempChar = cellsIn[0][y].getState();
       if (tempChar != ' ') {
         for (int x = 0; x < n; x++) {
-          if (cells[x][y].getState() != tempChar) {
+          if (cellsIn[x][y].getState() != tempChar) {
             break;
           } else if (x == n - 1) {
             return tempChar;
@@ -93,10 +126,10 @@ public class GameManager {
 
     // Check columns
     for (int x = 0; x < n; x++) {
-      tempChar = cells[x][0].getState();
+      tempChar = cellsIn[x][0].getState();
       if (tempChar != ' ') {
         for (int y = 0; y < n; y++) {
-          if (cells[x][y].getState() != tempChar) {
+          if (cellsIn[x][y].getState() != tempChar) {
             break;
           } else if (y == n - 1) {
             return tempChar;
@@ -106,10 +139,10 @@ public class GameManager {
     }
 
     // Check diagonals
-    tempChar = cells[0][0].getState();
+    tempChar = cellsIn[0][0].getState();
     if (tempChar != ' ') {
       for (int i = 0; i < n; i++) {
-        if (cells[i][i].getState() != tempChar) {
+        if (cellsIn[i][i].getState() != tempChar) {
           break;
         } else if (i == n - 1) {
           return tempChar;
@@ -117,10 +150,10 @@ public class GameManager {
       }
     }
 
-    tempChar = cells[n - 1][0].getState();
+    tempChar = cellsIn[n - 1][0].getState();
     if (tempChar != ' ') {
       for (int i = 0; i < n; i++) {
-        if (cells[n - 1 - i][i].getState() != tempChar) {
+        if (cellsIn[n - 1 - i][i].getState() != tempChar) {
           break;
         } else if (i == n - 1) {
           return tempChar;
@@ -131,17 +164,66 @@ public class GameManager {
     return ' ';
   }
 
-  public boolean checkTie() {
+  public boolean checkTie(Cell[][] cellsIn) {
     int n = GameSettings.n;
 
     for (int y = 0; y < n; y++) {
       for (int x = 0; x < n; x++) {
-        if (cells[x][y].getState() == ' ') {
+        if (cellsIn[x][y].getState() == ' ') {
           return false;
         }
       }
     }
-
     return true;
+  }
+
+  public int minimax(Cell[][] cellsIn, int depthIn, boolean isMaximizing) {
+    int n = GameSettings.n;
+
+    char result = checkWin(cells);
+    if (result != ' ') {
+      switch (result) {
+        case 'X':
+          return -1;
+        case 'O':
+          return 1;
+        case 'T':
+          return 0;
+      }
+    }
+
+    if (isMaximizing) {
+      int bestScore = Integer.MIN_VALUE; // "negative infinity"
+      for (int y = 0; y < n; y++) {
+        for (int x = 0; x < n; x++) {
+          Cell tempCell = cellsIn[x][y];
+          if (tempCell.getState() == ' ') {
+            tempCell.setState('O');
+            int tempScore = minimax(cellsIn, depthIn + 1, false);
+            tempCell.setState(' ');
+            if (tempScore > bestScore) {
+              bestScore = tempScore;
+            }
+          }
+        }
+      }
+      return bestScore;
+    } else {
+      int bestScore = Integer.MAX_VALUE; // "negative infinity"
+      for (int y = 0; y < n; y++) {
+        for (int x = 0; x < n; x++) {
+          Cell tempCell = cellsIn[x][y];
+          if (tempCell.getState() == ' ') {
+            tempCell.setState('X');
+            int tempScore = minimax(cellsIn, depthIn + 1, true);
+            tempCell.setState(' ');
+            if (tempScore < bestScore) {
+              bestScore = tempScore;
+            }
+          }
+        }
+      }
+      return bestScore;
+    }
   }
 }
