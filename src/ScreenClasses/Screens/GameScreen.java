@@ -52,7 +52,11 @@ public class GameScreen extends Screen {
     }
     p.textSize(64);
     if (gameManager.winner != ' ') {
-      p.text(gameManager.winner + " won!", p.width / 2, p.height / 2);
+      if (gameManager.winner == 'T') {
+        p.text("Tie!", p.width / 2, p.height / 2);
+      } else {
+        p.text(gameManager.winner + " won!", p.width / 2, p.height / 2);
+      }
     }
   }
 }

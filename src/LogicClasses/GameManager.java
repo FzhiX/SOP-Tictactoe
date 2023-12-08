@@ -67,6 +67,9 @@ public class GameManager {
     }
 
     winner = checkWin(cells);
+    if (checkTie() == true) {
+      winner = 'T';
+    }
   }
 
   public char checkWin(Cell[][] cells) {
@@ -126,5 +129,19 @@ public class GameManager {
     }
 
     return ' ';
+  }
+
+  public boolean checkTie() {
+    int n = GameSettings.n;
+
+    for (int y = 0; y < n; y++) {
+      for (int x = 0; x < n; x++) {
+        if (cells[x][y].getState() == ' ') {
+          return false;
+        }
+      }
+    }
+
+    return true;
   }
 }
