@@ -43,12 +43,15 @@ public class SettingsScreen extends Screen {
     addN.update();
     subN.update();
 
-    if (addN.isPressed() == true) {
+    if (addN.isPressed == true) {
       GameSettings.n++;
     }
-
-    if (subN.isPressed() == true) {
-      GameSettings.n--;
+    if (subN.isPressed == true) {
+      if (GameSettings.n > 1) {
+        GameSettings.n--;
+      } else {
+        System.out.println("Can't go lower than 1");
+      }
     }
 
     if (p.keyPressed && p.keyCode == PConstants.ENTER) {

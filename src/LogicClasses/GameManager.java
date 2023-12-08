@@ -1,14 +1,23 @@
 package LogicClasses;
 
+import ScreenClasses.Screen;
+import ScreenClasses.ScreenManager;
+import ScreenClasses.Screens.GameScreen;
+import ScreenClasses.Screens.SettingsScreen;
 import processing.core.*;
 
 public class GameManager {
 
+  ScreenManager screenManager;
   PApplet p;
   Cell[][] cells;
 
-  public GameManager(PApplet pIn) {
-    p = pIn;
+  public char winner = ' ';
+
+  public GameManager(ScreenManager screenManagerIn) {
+    this.screenManager = screenManagerIn;
+    this.p = screenManagerIn.getP();
+
     init();
   }
 
@@ -32,6 +41,9 @@ public class GameManager {
   }
 
   public void update() {
+    if (winner != ' ') { // If there is a winner, don't update
+      return;
+    }
     /*
     if (p.keyPressed && p.key == 'a') {
       GameSettings.n++;
@@ -53,5 +65,66 @@ public class GameManager {
         }
       }
     }
+
+    winner = checkWin(cells);
+  }
+
+  public char checkWin(Cell[][] cells) {
+    int n = GameSettings.n;
+
+    char tempChar = ' ';
+
+    // Check rows
+    for (int y = 0; y < n; y++) {
+      tempChar = cells[0][y].getState();
+      if (tempChar != ' ') {
+        for (int x = 0; x < n; x++) {
+          if (cells[x][y].getState() != tempChar) {
+            break;
+          } else if (x == n - 1) {
+            return tempChar;
+          }
+        }
+      }
+    }
+
+    // Check columns
+    for (int x = 0; x < n; x++) {
+      tempChar = cells[x][0].getState();
+      if (tempChar != ' ') {
+        for (int y = 0; y < n; y++) {
+          if (cells[x][y].getState() != tempChar) {
+            break;
+          } else if (y == n - 1) {
+            return tempChar;
+          }
+        }
+      }
+    }
+
+    // Check diagonals
+    tempChar = cells[0][0].getState();
+    if (tempChar != ' ') {
+      for (int i = 0; i < n; i++) {
+        if (cells[i][i].getState() != tempChar) {
+          break;
+        } else if (i == n - 1) {
+          return tempChar;
+        }
+      }
+    }
+
+    tempChar = cells[n - 1][0].getState();
+    if (tempChar != ' ') {
+      for (int i = 0; i < n; i++) {
+        if (cells[n - 1 - i][i].getState() != tempChar) {
+          break;
+        } else if (i == n - 1) {
+          return tempChar;
+        }
+      }
+    }
+
+    return ' ';
   }
 }

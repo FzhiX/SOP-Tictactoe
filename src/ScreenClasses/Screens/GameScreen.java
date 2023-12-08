@@ -13,7 +13,7 @@ public class GameScreen extends Screen {
   public GameScreen(ScreenManager screenManagerIn) {
     this.screenManager = screenManagerIn;
     this.p = screenManagerIn.getP();
-    gameManager = new GameManager(p);
+    gameManager = new GameManager(screenManager);
   }
 
   public void update() {
@@ -42,13 +42,17 @@ public class GameScreen extends Screen {
 
         p.textAlign(PConstants.CENTER, PConstants.CENTER);
         p.fill(0);
-
+        p.textSize(32);
         p.text(
           tempCell.getState(),
           (int) (tempCell.getX() + tempCell.getW() * 0.5),
           (int) (tempCell.getY() + tempCell.getH() * 0.5)
         );
       }
+    }
+    p.textSize(64);
+    if (gameManager.winner != ' ') {
+      p.text(gameManager.winner + " won!", p.width / 2, p.height / 2);
     }
   }
 }
