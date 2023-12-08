@@ -209,7 +209,7 @@ public class GameManager {
       }
       return bestScore;
     } else {
-      int bestScore = Integer.MAX_VALUE; // "negative infinity"
+      int bestScore = Integer.MAX_VALUE; // "infinity"
       for (int y = 0; y < n; y++) {
         for (int x = 0; x < n; x++) {
           Cell tempCell = cellsIn[x][y];
