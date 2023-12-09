@@ -11,12 +11,16 @@ public class GameManager {
   ScreenManager screenManager;
   PApplet p;
   Cell[][] cells;
+  byte results[] = new byte[43046721]; // dynamic programming with 3^16 possible states
 
   public char winner = ' ';
 
   public GameManager(ScreenManager screenManagerIn) {
     this.screenManager = screenManagerIn;
     this.p = screenManagerIn.getP();
+    for (int i = 0; i < Math.pow(3, 16); i++) {
+      results[i] = 2;
+    }
 
     init();
   }
@@ -30,8 +34,7 @@ public class GameManager {
 
     for (int y = 0; y < n; y++) {
       for (int x = 0; x < n; x++) {
-        cells[x][y] =
-          new Cell((x * tempWidth), (y * tempHeight), tempWidth, tempHeight);
+        cells[x][y] = new Cell((x * tempWidth), (y * tempHeight), tempWidth, tempHeight);
       }
     }
   }
@@ -45,11 +48,11 @@ public class GameManager {
       return;
     }
     /*
-    if (p.keyPressed && p.key == 'a') {
-      GameSettings.n++;
-      init();
-    }
-    */
+     * if (p.keyPressed && p.key == 'a') {
+     * GameSettings.n++;
+     * init();
+     * }
+     */
 
     int n = GameSettings.n;
 
@@ -59,10 +62,8 @@ public class GameManager {
           for (int y = 0; y < n; y++) {
             for (int x = 0; x < n; x++) {
               Cell tempCell = cells[x][y];
-              if (
-                tempCell.contains(p.mouseX, p.mouseY) &&
-                tempCell.getState() == ' '
-              ) {
+              if (tempCell.contains(p.mouseX, p.mouseY) &&
+                  tempCell.getState() == ' ') {
                 tempCell.setState('X');
 
                 GameSettings.turn = 'c';
@@ -180,14 +181,22 @@ public class GameManager {
   public int minimax(Cell[][] cellsIn, int depthIn, boolean isMaximizing) {
     int n = GameSettings.n;
 
+    int gameState = generateIndex();
+    if (results[gameState] != 2) {
+      return results[gameState];
+    }
+
     char result = checkWin(cells);
     if (result != ' ') {
       switch (result) {
         case 'X':
+          results[gameState] = -1;
           return -1;
         case 'O':
+          results[gameState] = 1;
           return 1;
         case 'T':
+          results[gameState] = 0;
           return 0;
       }
     }
@@ -207,6 +216,7 @@ public class GameManager {
           }
         }
       }
+      results[gameState] = (byte) bestScore;
       return bestScore;
     } else {
       int bestScore = Integer.MAX_VALUE; // "infinity"
@@ -223,7 +233,30 @@ public class GameManager {
           }
         }
       }
+      results[gameState] = (byte) bestScore;
       return bestScore;
     }
   }
+
+  int generateIndex() { // Generates an index for the results array
+
+    int index = 0;
+    int n = GameSettings.n;
+    int currentCipher = 0;
+
+    for (int y = 0; y < n; y++) {
+      for (int x = 0; x < n; x++) {
+        char state = cells[x][y].getState();
+        if (state == 'X') {
+          index += 1 * Math.pow(3, currentCipher);
+        } else if (state == 'O') {
+          index += 2 * Math.pow(3, currentCipher);
+        }
+        currentCipher++;
+      }
+    }
+
+    return index;
+  }
+
 }
