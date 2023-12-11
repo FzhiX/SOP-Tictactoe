@@ -11,7 +11,7 @@ public class GameManager {
   ScreenManager screenManager;
   PApplet p;
   Cell[][] cells;
-  byte results[] = new byte[43046721]; // dynamic programming with 3^16 possible states
+  byte results[] = new byte[43046721]; // dynamic programming with 3^(4^2) possible states
 
   public char winner = ' ';
 
@@ -34,7 +34,8 @@ public class GameManager {
 
     for (int y = 0; y < n; y++) {
       for (int x = 0; x < n; x++) {
-        cells[x][y] = new Cell((x * tempWidth), (y * tempHeight), tempWidth, tempHeight);
+        cells[x][y] =
+          new Cell((x * tempWidth), (y * tempHeight), tempWidth, tempHeight);
       }
     }
   }
@@ -62,8 +63,10 @@ public class GameManager {
           for (int y = 0; y < n; y++) {
             for (int x = 0; x < n; x++) {
               Cell tempCell = cells[x][y];
-              if (tempCell.contains(p.mouseX, p.mouseY) &&
-                  tempCell.getState() == ' ') {
+              if (
+                tempCell.contains(p.mouseX, p.mouseY) &&
+                tempCell.getState() == ' '
+              ) {
                 tempCell.setState('X');
 
                 GameSettings.turn = 'c';
@@ -103,10 +106,6 @@ public class GameManager {
   }
 
   public char checkWin(Cell[][] cellsIn) {
-    if (checkTie(cellsIn)) {
-      return 'T';
-    }
-
     int n = GameSettings.n;
 
     char tempChar = ' ';
@@ -160,6 +159,11 @@ public class GameManager {
           return tempChar;
         }
       }
+    }
+
+    // Check tie
+    if (checkTie(cellsIn)) {
+      return 'T';
     }
 
     return ' ';
@@ -239,7 +243,6 @@ public class GameManager {
   }
 
   int generateIndex() { // Generates an index for the results array
-
     int index = 0;
     int n = GameSettings.n;
     int currentCipher = 0;
@@ -258,5 +261,4 @@ public class GameManager {
 
     return index;
   }
-
 }

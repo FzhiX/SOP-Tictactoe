@@ -44,7 +44,11 @@ public class SettingsScreen extends Screen {
     subN.update();
 
     if (addN.isPressed == true) {
-      GameSettings.n++;
+      if (GameSettings.n < 4) {
+        GameSettings.n++;
+      } else {
+        System.out.println("Can't go higher than 4");
+      }
     }
     if (subN.isPressed == true) {
       if (GameSettings.n > 1) {
