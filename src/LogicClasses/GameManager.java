@@ -1,9 +1,7 @@
 package LogicClasses;
 
-import ScreenClasses.Screen;
-import ScreenClasses.ScreenManager;
-import ScreenClasses.Screens.GameScreen;
-import ScreenClasses.Screens.SettingsScreen;
+import ScreenClasses.*;
+import ScreenClasses.Screens.*;
 import processing.core.*;
 
 public class GameManager {
@@ -48,12 +46,6 @@ public class GameManager {
     if (winner != ' ') { // If there is a winner, don't update
       return;
     }
-    /*
-     * if (p.keyPressed && p.key == 'a') {
-     * GameSettings.n++;
-     * init();
-     * }
-     */
 
     int n = GameSettings.n;
 

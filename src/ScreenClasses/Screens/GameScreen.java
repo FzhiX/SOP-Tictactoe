@@ -24,6 +24,7 @@ public class GameScreen extends Screen {
     renderCells();
   }
 
+  // Renders the cells on the game screen
   private void renderCells() {
     p.rectMode(PConstants.CORNER);
     p.stroke(0);

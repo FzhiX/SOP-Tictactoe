@@ -2,8 +2,8 @@ package LogicClasses;
 
 public class Cell {
 
-  private char state;
-  private int x, y, w, h;
+  private char state; // Represents the state of the cell (empty, X, or O)
+  private int x, y, w, h; // Represents the position and dimensions of the cell
 
   public Cell(int xIn, int yIn, int wIn, int hIn) {
     state = ' ';
@@ -38,6 +38,7 @@ public class Cell {
   }
 
   public boolean contains(int xIn, int yIn) {
+    // Checks if the given coordinates (xIn, yIn) are within the boundaries of the cell
     if (xIn >= x && xIn <= x + w && yIn >= y && yIn <= y + h) {
       return true;
     }

@@ -15,6 +15,7 @@ public class SettingsScreen extends Screen {
     this.screenManager = screenManagerIn;
     this.p = screenManagerIn.getP();
 
+    // Create the "addN" button
     addN =
       new Button(
         p,
@@ -24,6 +25,7 @@ public class SettingsScreen extends Screen {
         p.height / 10
       );
 
+    // Create the "subN" button
     subN =
       new Button(
         p,
@@ -35,14 +37,21 @@ public class SettingsScreen extends Screen {
   }
 
   public void render() {
+    // Render the "addN" button
     addN.render();
+
+    // Render the "subN" button
     subN.render();
   }
 
   public void update() {
+    // Update the "addN" button
     addN.update();
+
+    // Update the "subN" button
     subN.update();
 
+    // Increase the value of GameSettings.n if "addN" button is pressed
     if (addN.isPressed == true) {
       if (GameSettings.n < 4) {
         GameSettings.n++;
@@ -50,6 +59,8 @@ public class SettingsScreen extends Screen {
         System.out.println("Can't go higher than 4");
       }
     }
+
+    // Decrease the value of GameSettings.n if "subN" button is pressed
     if (subN.isPressed == true) {
       if (GameSettings.n > 1) {
         GameSettings.n--;
@@ -58,6 +69,7 @@ public class SettingsScreen extends Screen {
       }
     }
 
+    // Switch to the GameScreen when the Enter key is pressed
     if (p.keyPressed && p.keyCode == PConstants.ENTER) {
       screenManager.setCurrentScreen(new GameScreen(screenManager));
     }
