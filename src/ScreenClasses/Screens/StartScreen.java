@@ -1,3 +1,6 @@
 package ScreenClasses.Screens;
+import ScreenClasses.*;
 
-public class StartScreen {}
+public class StartScreen extends Screen {
+
+}

@@ -20,7 +20,7 @@ public class App extends PApplet {
   }
 
   public void draw() {
-    background(238); // Sets the background color of the application window
+    background(GameSettings.color); // Sets the background color of the application window
     screenManager.run(); // Runs the screen manager
     System.out.println(GameSettings.n); // Prints the value of GameSettings.n (for testing purposes)
   }
