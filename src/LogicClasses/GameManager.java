@@ -235,17 +235,17 @@ public class GameManager {
   int generateIndex() { // Generates an index for the results array
     int index = 0;
     int n = GameSettings.n;
-    int currentCipher = 0;
+    int currentDigit = 0;
 
     for (int y = 0; y < n; y++) {
       for (int x = 0; x < n; x++) {
         char state = cells[x][y].getState();
         if (state == 'X') {
-          index += 1 * Math.pow(3, currentCipher);
+          index += 1 * Math.pow(3, currentDigit);
         } else if (state == 'O') {
-          index += 2 * Math.pow(3, currentCipher);
+          index += 2 * Math.pow(3, currentDigit);
         }
-        currentCipher++;
+        currentDigit++;
       }
     }
 
