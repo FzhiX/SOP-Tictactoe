@@ -77,6 +77,7 @@ public class GameManager {
             if (tempCell.getState() == ' ') {
               tempCell.setState('O');
               int tempScore = minimax(cells, 0, false);
+              System.out.println("Score for move (" + x + "," + y + "): " + tempScore); // print the score
               tempCell.setState(' ');
               if (tempScore > bestScore) {
                 bestScore = tempScore;
@@ -87,6 +88,7 @@ public class GameManager {
           }
         }
         cells[bestMove[0]][bestMove[1]].setState('O');
+        System.out.println("");
         GameSettings.turn = 'h';
         break;
       default: // If turn is not 'h' or 'c', go to settings screen
@@ -206,9 +208,7 @@ public class GameManager {
             tempCell.setState('O');
             int tempScore = minimax(cellsIn, depthIn + 1, false);
             tempCell.setState(' ');
-            if (tempScore > bestScore) {
-              bestScore = tempScore;
-            }
+            bestScore = Math.max(tempScore, bestScore);
           }
         }
       }
@@ -223,9 +223,7 @@ public class GameManager {
             tempCell.setState('X');
             int tempScore = minimax(cellsIn, depthIn + 1, true);
             tempCell.setState(' ');
-            if (tempScore < bestScore) {
-              bestScore = tempScore;
-            }
+            bestScore = Math.min(tempScore, bestScore);
           }
         }
       }

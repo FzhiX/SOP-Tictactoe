@@ -6,7 +6,7 @@ import processing.core.PConstants;
 public class Button {
 
   PApplet p;
-  private int x, y, w, h, color;
+  public int x, y, w, h, color;
   public boolean isPressed = false;
   private boolean pressed1 = false, pressed2 = true; // for helping with the mousePressed() method
 
